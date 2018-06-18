@@ -1,89 +1,91 @@
 <?php
 /**
- * Основные параметры WordPress.
+ * The base configuration for WordPress
  *
- * Скрипт для создания wp-config.php использует этот файл в процессе
- * установки. Необязательно использовать веб-интерфейс, можно
- * скопировать файл в "wp-config.php" и заполнить значения вручную.
+ * The wp-config.php creation script uses this file during the
+ * installation. You don't have to use the web site, you can
+ * copy this file to "wp-config.php" and fill in the values.
  *
- * Этот файл содержит следующие параметры:
+ * This file contains the following configurations:
  *
- * * Настройки MySQL
- * * Секретные ключи
- * * Префикс таблиц базы данных
+ * * MySQL settings
+ * * Secret keys
+ * * Database table prefix
  * * ABSPATH
  *
  * @link https://codex.wordpress.org/Editing_wp-config.php
  *
  * @package WordPress
  */
-
-// ** Параметры MySQL: Эту информацию можно получить у вашего хостинг-провайдера ** //
-/** Имя базы данных для WordPress */
-define('DB_NAME', 'dc3e4boid9ogaf');
-
-/** Имя пользователя MySQL */
-define('DB_USER', 'ziargnzlnkxjty');
-
-/** Пароль к базе данных MySQL */
-define('DB_PASSWORD', '8d0d72bf3d2ca6447c89c9ae1e021b4c6f2bdc452d07be4bc8fb400769426a61');
-
-/** Имя сервера MySQL */
-define('DB_HOST', '
-ec2-54-217-217-142.eu-west-1.compute.amazonaws.com');
-
-/** Кодировка базы данных для создания таблиц. */
+// Sendgrid settings - Read in the sendgrid auth from the config //
+define('SENDGRID_USERNAME', $_ENV["SENDGRID_USERNAME"]);
+define('SENDGRID_PASSWORD', $_ENV["SENDGRID_PASSWORD"]); 
+  
+// S3 Config Info - read the S3 Access Keys from the config //
+define( 'AWS_ACCESS_KEY_ID', $_ENV["AWS_ACCESS_KEY_ID"]);
+define( 'AWS_SECRET_ACCESS_KEY', $_ENV["AWS_SECRET_ACCESS_KEY"]);  
+// ** Heroku Postgres settings - from Heroku Environment ** //
+$db = parse_url($_ENV["DATABASE_URL"]);
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', trim($db["path"],"/"));
+/** MySQL database username */
+define('DB_USER', $db["user"]);
+/** MySQL database password */
+define('DB_PASSWORD', $db["pass"]);
+/** MySQL hostname */
+define('DB_HOST', $db["host"]);
+/** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
-
-/** Схема сопоставления. Не меняйте, если не уверены. */
+/** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
-
 /**#@+
- * Уникальные ключи и соли для аутентификации.
+ * Authentication Unique Keys and Salts.
  *
- * Смените значение каждой константы на уникальную фразу.
- * Можно сгенерировать их с помощью {@link https://api.wordpress.org/secret-key/1.1/salt/ сервиса ключей на WordPress.org}
- * Можно изменить их, чтобы сделать существующие файлы cookies недействительными. Пользователям потребуется авторизоваться снова.
+ * Change these to different unique phrases!
+ * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+ * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         'впишите сюда уникальную фразу');
-define('SECURE_AUTH_KEY',  'впишите сюда уникальную фразу');
-define('LOGGED_IN_KEY',    'впишите сюда уникальную фразу');
-define('NONCE_KEY',        'впишите сюда уникальную фразу');
-define('AUTH_SALT',        'впишите сюда уникальную фразу');
-define('SECURE_AUTH_SALT', 'впишите сюда уникальную фразу');
-define('LOGGED_IN_SALT',   'впишите сюда уникальную фразу');
-define('NONCE_SALT',       'впишите сюда уникальную фразу');
-
+define('AUTH_KEY',         $_ENV["AUTH_KEY"]);
+define('SECURE_AUTH_KEY',  $_ENV["SECURE_AUTH_KEY"]);
+define('LOGGED_IN_KEY',    $_ENV["LOGGED_IN_KEY"]);
+define('NONCE_KEY',        $_ENV["NONCE_KEY"]);
+define('AUTH_SALT',        $_ENV["AUTH_SALT"]);
+define('SECURE_AUTH_SALT', $_ENV["SECURE_AUTH_SALT"]);
+define('LOGGED_IN_SALT',   $_ENV["LOGGED_IN_SALT"]);
+define('NONCE_SALT',       $_ENV["NONCE_SALT"]);
 /**#@-*/
-
 /**
- * Префикс таблиц в базе данных WordPress.
+ * WordPress Database Table prefix.
  *
- * Можно установить несколько сайтов в одну базу данных, если использовать
- * разные префиксы. Пожалуйста, указывайте только цифры, буквы и знак подчеркивания.
+ * You can have multiple installations in one database if you give each a unique
+ * prefix. Only numbers, letters, and underscores please!
  */
 $table_prefix  = 'wp_';
-
 /**
- * Для разработчиков: Режим отладки WordPress.
+ * WordPress Localized Language, defaults to English.
  *
- * Измените это значение на true, чтобы включить отображение уведомлений при разработке.
- * Разработчикам плагинов и тем настоятельно рекомендуется использовать WP_DEBUG
- * в своём рабочем окружении.
+ * Change this to localize WordPress. A corresponding MO file for the chosen
+ * language must be installed to wp-content/languages. For example, install
+ * de_DE.mo to wp-content/languages and set WPLANG to 'de_DE' to enable German
+ * language support.
+ */
+define('WPLANG', 'en');
+/**
+ * For developers: WordPress debugging mode.
  *
- * Информацию о других отладочных константах можно найти в Кодексе.
- *
- * @link https://codex.wordpress.org/Debugging_in_WordPress
+ * Change this to true to enable the display of notices during development.
+ * It is strongly recommended that plugin and theme developers use WP_DEBUG
+ * in their development environments.
  */
 define('WP_DEBUG', false);
-
-/* Это всё, дальше не редактируем. Успехов! */
-
-/** Абсолютный путь к директории WordPress. */
+define( 'WP_AUTO_UPDATE_CORE', false );
+/* That's all, stop editing! Happy blogging. */
+/** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
 
-/** Инициализирует переменные WordPress и подключает файлы. */
-require_once(ABSPATH . 'wp-settings.php');
+/** Sets up WordPress vars and included files. */
+require_once (ABSPATH . 'wp-settings.php');
